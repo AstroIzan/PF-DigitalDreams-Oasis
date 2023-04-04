@@ -4811,11 +4811,12 @@ TextureImporter:
       GUI_4x_sliced-export_127: 909780470
       GUI_4x_sliced-export_126: 1224461806
       GUI_4x_sliced-export_40: -1101192720
-      GUI_4x_sliced-export_135: -1089679819
       GUI_4x_sliced-export_183: 1120274752
-      GUI_4x_sliced-export_219: 335681580
+      GUI_4x_sliced-export_197: 1083803687
+      GUI_4x_sliced-export_135: -1089679819
       GUI_4x_sliced-export_75: 686006258
       GUI_4x_sliced-export_209: 324516394
+      GUI_4x_sliced-export_219: 335681580
       GUI_4x_sliced-export_8: 1257491275
       GUI_4x_sliced-export_151: -996671591
       GUI_4x_sliced-export_173: -1963806002
@@ -4823,7 +4824,6 @@ TextureImporter:
       GUI_4x_sliced-export_98: 1970731007
       GUI_4x_sliced-export_195: -227331085
       GUI_4x_sliced-export_83: 1509858045
-      GUI_4x_sliced-export_197: 1083803687
       GUI_4x_sliced-export_200: 1743033588
       GUI_4x_sliced-export_159: 1199823320
       GUI_4x_sliced-export_220: 1262239247
@@ -4846,8 +4846,8 @@ TextureImporter:
       GUI_4x_sliced-export_194: -1831563236
       GUI_4x_sliced-export_176: -362321521
       GUI_4x_sliced-export_95: -406144440
-      GUI_4x_sliced-export_107: -1362587011
       GUI_4x_sliced-export_140: -425897388
+      GUI_4x_sliced-export_107: -1362587011
       GUI_4x_sliced-export_46: -301161939
       GUI_4x_sliced-export_55: -1893336074
       GUI_4x_sliced-export_25: 483219986
@@ -4909,14 +4909,14 @@ TextureImporter:
       GUI_4x_sliced-export_54: -696268270
       GUI_4x_sliced-export_35: 559853030
       GUI_4x_sliced-export_22: -1675160567
-      GUI_4x_sliced-export_24: -1850004614
       GUI_4x_sliced-export_212: -1831931065
+      GUI_4x_sliced-export_24: -1850004614
       GUI_4x_sliced-export_104: 1718872029
       GUI_4x_sliced-export_156: -712853204
       GUI_4x_sliced-export_65: 1154623665
       GUI_4x_sliced-export_143: 1498461428
-      GUI_4x_sliced-export_72: 2127944109
       GUI_4x_sliced-export_181: 1157073460
+      GUI_4x_sliced-export_72: 2127944109
       GUI_4x_sliced-export_37: -818814832
       GUI_4x_sliced-export_205: -1082481390
       GUI_4x_sliced-export_43: 1965042207
@@ -4937,11 +4937,11 @@ TextureImporter:
       GUI_4x_sliced-export_144: -913347176
       GUI_4x_sliced-export_7: -1723416347
       GUI_4x_sliced-export_3: -1835540821
-      GUI_4x_sliced-export_74: -1900394333
-      GUI_4x_sliced-export_192: -1220743749
       GUI_4x_sliced-export_175: -1143362611
-      GUI_4x_sliced-export_185: 1752550873
+      GUI_4x_sliced-export_74: -1900394333
       GUI_4x_sliced-export_202: 396551223
+      GUI_4x_sliced-export_185: 1752550873
+      GUI_4x_sliced-export_192: -1220743749
       GUI_4x_sliced-export_146: 1197382861
       GUI_4x_sliced-export_97: 239844394
       GUI_4x_sliced-export_114: 1243093380
