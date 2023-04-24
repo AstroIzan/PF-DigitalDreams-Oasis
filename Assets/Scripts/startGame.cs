@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class startGameScript : MonoBehaviour
+public class startGame : MonoBehaviour
 {
     private GameObject modalAlertGame;
     private CanvasGroup canvasGroup;
@@ -21,7 +21,7 @@ public class startGameScript : MonoBehaviour
         }
     }
 
-    public void startGame()
+    public void continueGame()
     {
         SceneManager.LoadScene("gameScene");
     }
@@ -47,7 +47,6 @@ public class startGameScript : MonoBehaviour
 
     public void acceptModalAlertGame()
     {
-        modalAlertGame.GetComponent<Renderer>().enabled = false;
-        Debug.Log("");
+        SceneManager.LoadScene("newGameDifficultyScene");
     }
 }
