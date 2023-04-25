@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/optionsScene.unity
     guid: a2450b5f39c6f9349b6a32ccba619245
+  - enabled: 1
+    path: Assets/Scenes/gameScene.unity
+    guid: 0b627e4412ce94644a71618f5e312756
+  - enabled: 1
+    path: Assets/Scenes/newGameDifficultyScene.unity
+    guid: c12ab00319fb5a04e826fa1b3499c60a
   m_configObjects: {}
