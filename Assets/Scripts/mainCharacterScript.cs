@@ -6,6 +6,7 @@ public class mainCharacterScript : MonoBehaviour
 {
     public float speed;
     public float jumpForce;
+    public float rayCastSize;
 
     private Rigidbody2D Rigidbody2D;
     private Animator Animator;
@@ -39,7 +40,7 @@ public class mainCharacterScript : MonoBehaviour
 
         jumpPressed = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space);
         
-        if (Physics2D.Raycast(transform.position, Vector3.down, 0.23f)) 
+        if (Physics2D.Raycast(transform.position, Vector3.down, rayCastSize)) 
         { 
             isGrounded = true; 
         } 
@@ -69,5 +70,4 @@ public class mainCharacterScript : MonoBehaviour
     {
         hasJumped = false;
     }
-
 }
