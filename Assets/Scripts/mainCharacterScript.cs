@@ -49,16 +49,23 @@ public class mainCharacterScript : MonoBehaviour
             isGrounded = false; 
         }
 
-        if (jumpPressed && isGrounded && !hasJumped)
+        if (jumpPressed && Physics2D.Raycast(transform.position, Vector3.down, rayCastSize) && !hasJumped)
         {
             Jump();
             hasJumped = true;
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            exitGame();
+        }
+
     }
 
     private void Jump()
     {
         Rigidbody2D.AddForce(Vector2.up * jumpForce);
+        
     }
 
     private void FixedUpdate()
@@ -70,4 +77,10 @@ public class mainCharacterScript : MonoBehaviour
     {
         hasJumped = false;
     }
+
+    private void exitGame()
+    {
+        Application.Quit();
+    }
+
 }
