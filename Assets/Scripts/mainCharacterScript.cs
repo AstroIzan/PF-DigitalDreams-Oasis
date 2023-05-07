@@ -3,26 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class mainCharacterScript : MonoBehaviour
-{
-    public float speed;
+{   
+    // Variables
+    public float speed = 1;
     public float jumpForce;
     public float rayCastSize;
+    public float doubleTapSpeedMultiplier = 1.3f;
 
     private Rigidbody2D Rigidbody2D;
     private Animator Animator;
     
+    public bool isGrounded;
+    public bool jumpPressed;
+    public bool hasJumped;
+    private bool isRunning;
+    private bool isDoubleTap = false;
     private float horizontal;
-    private bool isGrounded;
-    private bool jumpPressed;
-    private bool hasJumped;
+    private float lastTapTime = 0f;
+    private float currentSpeed;
+    private float doubleTapTime = 0.2f;
 
+    /**
+     * Method to initialize the script
+     * - Get the rigidbody
+     * - Get the animator
+     */
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
+    /**
+     * Method to update the script every frame
+     * - Get the horizontal axis
+     * - Check the horizontal axis
+         * [IF is greater than 0] - Set the scale to 1
+         * [ELSE IF is less than 0] - Set the scale to -1
+     * - Check if the player is running
+         * [IF is running] - Set the running animation to true
+     * - Check if the player has pressed the jump button
+         * [IF has pressed the jump button] - Set the jump animation to true
+     * - Check if the player is grounded
+         * [IF is grounded] - Set the is grounded to true
+         * [ELSE] - Set the is grounded to false
+     * - Check if the player has jumped
+         * [IF has jumped] - Call the jump method
+     * - Check if the player has pressed the left or right arrow 
+         * [IF has pressed the left or right arrow] - Set the last tap time
+     * - Check if the player has pressed the left or right arrow twice
+         * [IF has pressed the left or right arrow twice] - Set the double tap to true
+         * [ELSE] - Set the double tap to false
+     * - Set the last tap time
+     */
     void Update()
     {
         horizontal = Input.GetAxis("Horizontal");
@@ -55,32 +88,59 @@ public class mainCharacterScript : MonoBehaviour
             hasJumped = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) )
         {
-            exitGame();
-        }
+            float timeSinceLastTap = Time.time - lastTapTime;
 
+            if (timeSinceLastTap < doubleTapTime)
+            {
+                isDoubleTap = true;
+            }
+            else
+            {
+                isDoubleTap = false;
+            }
+
+            lastTapTime = Time.time;
+        }
     }
 
+    /**
+     * Method to jump
+     * - Add force to the player
+     */
     private void Jump()
     {
         Rigidbody2D.AddForce(Vector2.up * jumpForce);
         
     }
 
-    private void FixedUpdate()
+    /**
+     * Method to update the script every physics frame
+     * - Set the current speed
+     * - Check if the player has double tapped
+         * [IF has double tapped] - Set the current speed to the double tap speed multiplier
+     * - Set the velocity
+     */
+    void FixedUpdate()
     {
-        Rigidbody2D.velocity = new Vector2(horizontal * speed, Rigidbody2D.velocity.y);
+        currentSpeed = speed;
+
+        if (isDoubleTap)
+        {
+            currentSpeed *= doubleTapSpeedMultiplier;
+        }
+
+        Rigidbody2D.velocity = new Vector2(horizontal * currentSpeed, Rigidbody2D.velocity.y);
     }
     
+    /**
+     * Method to check if the player has collided with something
+     * - Check if the player has collided with something
+         * [IF has collided with something] - Set the has jumped to false
+     */
     private void OnCollisionEnter2D(Collision2D collision)
     {
         hasJumped = false;
     }
-
-    private void exitGame()
-    {
-        Application.Quit();
-    }
-
 }

@@ -5,21 +5,29 @@ using UnityEngine.SceneManagement;
 
 public class mainMenu : MonoBehaviour
 {
-    // Its a menu, with three buttons
-    // The first (ButtonPlay) is to go to the gameStartScene
-    // The second (ButtonOptions) is to go to the optionsScene
-    // The third (ButtonExit) is to quit the game 
-
+    /**
+     * Meethod that is called on every frame
+     * - Check if the escape key is pressed
+         * [IF is pressed] - Load the main menu scene
+     */
     public void playGame()
     {
         SceneManager.LoadScene("gameStartScene");
     }
 
+    /**
+     * Method to load the options scene
+     * - Load the options scene
+     */
     public void options()
     {
         SceneManager.LoadScene("optionsScene");
     }
 
+    /**
+     * Method to load the credits scene
+     * - Load the credits scene
+     */
     public void quitGame()
     {
         Debug.Log("Quit");
