@@ -12,6 +12,9 @@ public class inGameSettingsScript : MonoBehaviour
     private GameObject SettingsScene;
     private CanvasGroup SettingsCanvasGroup;
 
+    private GameObject InGameHUD;
+    private CanvasGroup InGameHUDCanvasGroup;
+
     /**
      * Method to start the script
      * - Get the objects by name
@@ -42,6 +45,17 @@ public class inGameSettingsScript : MonoBehaviour
             SettingsCanvasGroup = SettingsScene.GetComponent<CanvasGroup>();
             closeObject("settings");
         }
+
+        InGameHUD = GameObject.Find("InGameHUD");
+        if (InGameHUD == null)
+        {
+            Debug.Log("No se ha encontrado el objeto InGameHUD");
+        }
+        else
+        {
+            InGameHUDCanvasGroup = InGameHUD.GetComponent<CanvasGroup>();
+            openObject("InGameHUD");
+        }
     }
 
     /**
@@ -63,11 +77,13 @@ public class inGameSettingsScript : MonoBehaviour
                     closeObject("modalAlert");
                 }
                 closeObject("settings");
+                openObject("InGameHUD");
                 Time.timeScale = 1f;
             }
             else 
             {
                 openObject("settings");
+                closeObject("InGameHUD");
                 Time.timeScale = 0f;
             }
         }
@@ -90,6 +106,11 @@ public class inGameSettingsScript : MonoBehaviour
                 SettingsCanvasGroup.alpha = 1;
                 SettingsCanvasGroup.interactable = true;
                 SettingsCanvasGroup.blocksRaycasts = true;
+                break;
+            case "InGameHUD":
+                InGameHUDCanvasGroup.alpha = 1;
+                InGameHUDCanvasGroup.interactable = true;
+                InGameHUDCanvasGroup.blocksRaycasts = true;
                 break;
             default:
                 Debug.Log("No se ha encontrado el objeto " + objectName);
@@ -115,6 +136,11 @@ public class inGameSettingsScript : MonoBehaviour
                 SettingsCanvasGroup.interactable = false;
                 SettingsCanvasGroup.blocksRaycasts = false;
                 break;
+            case "InGameHUD":
+                InGameHUDCanvasGroup.alpha = 0;
+                InGameHUDCanvasGroup.interactable = false;
+                InGameHUDCanvasGroup.blocksRaycasts = false;
+                break;
             default:
                 Debug.Log("No se ha encontrado el objeto " + objectName);
                 break;
@@ -133,6 +159,8 @@ public class inGameSettingsScript : MonoBehaviour
                 return ModalAlertCanvasGroup.alpha == 1;
             case "settings":
                 return SettingsCanvasGroup.alpha == 1;
+            case "InGameHUD":
+                return InGameHUDCanvasGroup.alpha == 1;
             default:
                 Debug.Log("No se ha encontrado el objeto " + objectName);
                 return false;

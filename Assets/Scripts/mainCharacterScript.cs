@@ -9,6 +9,11 @@ public class mainCharacterScript : MonoBehaviour
     public float jumpForce;
     public float rayCastSize;
     public float doubleTapSpeedMultiplier = 1.3f;
+    public float health = 10;
+    public float damage = 1f;
+    public float stamina = 10;
+    public float mana = 10;
+    public float money = 0000;
 
     private Rigidbody2D Rigidbody2D;
     private Animator Animator;
@@ -102,6 +107,18 @@ public class mainCharacterScript : MonoBehaviour
             }
 
             lastTapTime = Time.time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.K)) 
+        {
+            money += 1;
+        }
+
+        if (Input.GetKeyDown(KeyCode.L)) 
+        {
+            health -= damage;
+            mana -= damage;
+            stamina -= damage;
         }
     }
 
