@@ -1935,7 +1935,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.647583, y: 0.3062744}
+  m_AnchoredPosition: {x: 0.64746094, y: 0.3062744}
   m_SizeDelta: {x: 31.29541, y: 31.295654}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &514769827
@@ -11759,7 +11759,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: 0.000045776367}
+  m_AnchoredPosition: {x: -0.74, y: 0.23}
   m_SizeDelta: {x: 476.5404, y: 22.4212}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1448317477
@@ -13010,8 +13010,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0068542957, y: 0.00426504}
-  m_Size: {x: 0.09618282, y: 0.25660467}
+  m_Offset: {x: 0.009081483, y: 0.004901424}
+  m_Size: {x: 0.09172845, y: 0.2553319}
   m_Direction: 0
 --- !u!50 &1983537381
 Rigidbody2D:
