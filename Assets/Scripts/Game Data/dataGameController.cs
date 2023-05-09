@@ -7,18 +7,14 @@ using TMPro;
 
 public class dataGameController : MonoBehaviour
 {
-    // Variables
-    public GameObject mainCharacter;
-    public string saveFile;
-    public dataGameScript dataGameScript = new dataGameScript();
+    public dataGameScript dataGameScript = new dataGameScript(); // Instance of the dataGameScript
+    public string saveFile; // String to store the path of the save file
 
-    /*
-     * Health, stamina and mana bar
-     */
-    public GameObject healthBar;
-    public GameObject staminaBar;
-    public GameObject manaBar;
-    public GameObject moneyHUD;
+    private GameObject mainCharacter; // GameObject to store the main character
+    private GameObject healthBar; // GameObject to store the health bar
+    private GameObject staminaBar; // GameObject to store the stamina bar
+    private GameObject manaBar; // GameObject to store the mana bar
+    private GameObject moneyHUD; // GameObject to store the money HUD
 
     private TextMeshProUGUI moneyText;
 
@@ -34,7 +30,12 @@ public class dataGameController : MonoBehaviour
         getData();
     }
 
-    void Start() 
+    /**
+     * Method to start on the Start
+     * - Get the money text
+     * - Get the bars 
+     */
+    void Start()
     {
         healthBar = GameObject.Find("HealthHUD");
         healthBar = healthBar.transform.GetChild(0).gameObject;
@@ -71,16 +72,19 @@ public class dataGameController : MonoBehaviour
 
     /**
      * Method to get the data
+     * - Check if the file exists
+         * [IF exists] - Get the data from local file and set it to the main character
+         * [ELSE] - Show a message
      */
     public void getData() {
         if (File.Exists(saveFile)) {
             string json = File.ReadAllText(saveFile);
             dataGameScript = JsonUtility.FromJson<dataGameScript>(json);
             mainCharacter.transform.position = dataGameScript.mainCharacterPosition;
-            mainCharacter.GetComponent<mainCharacterScript>().mana = dataGameScript.mana;
             mainCharacter.GetComponent<mainCharacterScript>().currentHealth = dataGameScript.currentHealth;
-            mainCharacter.GetComponent<mainCharacterScript>().stamina = dataGameScript.stamina;
-            mainCharacter.GetComponent<mainCharacterScript>().money = dataGameScript.money;
+            mainCharacter.GetComponent<mainCharacterScript>().currentStamina = dataGameScript.currentStamina;
+            mainCharacter.GetComponent<mainCharacterScript>().currentMana = dataGameScript.currentMana;
+            mainCharacter.GetComponent<mainCharacterScript>().currentMoney = dataGameScript.currentMoney;
         }
         else
         {
@@ -89,36 +93,68 @@ public class dataGameController : MonoBehaviour
     }
 
     /**
-     * Method to set the data
-        * - Set the data
+     * Method to save the data in the file
+     * - Get the data of the main character
+     * - Convert the data to json
+     * - Write the json in the file
      */
     private void setData() {
         dataGameScript.mainCharacterPosition = mainCharacter.transform.position;
-        dataGameScript.mana = mainCharacter.GetComponent<mainCharacterScript>().mana;
         dataGameScript.currentHealth = mainCharacter.GetComponent<mainCharacterScript>().currentHealth;
-        dataGameScript.stamina = mainCharacter.GetComponent<mainCharacterScript>().stamina;
-        dataGameScript.money = mainCharacter.GetComponent<mainCharacterScript>().money;
+        dataGameScript.currentStamina = mainCharacter.GetComponent<mainCharacterScript>().currentStamina;
+        dataGameScript.currentMana = mainCharacter.GetComponent<mainCharacterScript>().currentMana;
+        dataGameScript.currentMoney = mainCharacter.GetComponent<mainCharacterScript>().currentMoney;
         string json = JsonUtility.ToJson(dataGameScript);
         File.WriteAllText(saveFile, json);  
     }
 
-    private void setStamina() {
-        dataGameScript.stamina = mainCharacter.GetComponent<mainCharacterScript>().stamina;
-        staminaBar.GetComponent<Image>().fillAmount = dataGameScript.stamina / 10f;
+    /**
+     * Method to set the position of the main character
+     * - Get the position of the main character
+     * - Set the position of the main character
+     */
+    private void setPosition() {
+        dataGameScript.mainCharacterPosition = mainCharacter.transform.position;
+        mainCharacter.transform.position = dataGameScript.mainCharacterPosition;
     }
 
+    /**
+     * Method to set the health
+     * - Get the health of the main character
+     * - Set the health bar
+     */
     private void setHealth() {
         dataGameScript.currentHealth = mainCharacter.GetComponent<mainCharacterScript>().currentHealth;
         healthBar.GetComponent<Image>().fillAmount = dataGameScript.currentHealth / 10f;
     }
 
-    private void setMana() {
-        dataGameScript.mana = mainCharacter.GetComponent<mainCharacterScript>().mana;
-        manaBar.GetComponent<Image>().fillAmount = dataGameScript.mana / 10f;
+    /**
+     * Method to set the stamina
+     * - Get the stamina of the main character
+     * - Set the stamina bar
+     */
+    private void setStamina() {
+        dataGameScript.currentStamina = mainCharacter.GetComponent<mainCharacterScript>().currentStamina;
+        staminaBar.GetComponent<Image>().fillAmount = dataGameScript.currentStamina / 10f;
     }
 
+    /**
+     * Method to set the mana
+     * - Get the mana of the main character
+     * - Set the mana bar
+     */
+    private void setMana() {
+        dataGameScript.currentMana = mainCharacter.GetComponent<mainCharacterScript>().currentMana;
+        manaBar.GetComponent<Image>().fillAmount = dataGameScript.currentMana / 10f;
+    }
+
+    /**
+     * Method to set the money
+     * - Get the money of the main character
+     * - Set the money text
+     */
     private void setMoney() {
-        dataGameScript.money = mainCharacter.GetComponent<mainCharacterScript>().money;
-        moneyText.text = dataGameScript.money.ToString("0000");
+        dataGameScript.currentMoney = mainCharacter.GetComponent<mainCharacterScript>().currentMoney;
+        moneyText.text = dataGameScript.currentMoney.ToString("0000");
     }
 }

@@ -1,194 +1,146 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class mainCharacterScript : MonoBehaviour
 {   
-    // Variables
-    public float speed = 1;
-    public float jumpForce;
-    public float rayCastSize;
-    public float doubleTapSpeedMultiplier = 1.3f;
-    public float maxHealth = 10;
-    public float currentHealth;
-    public float damage = 1f;
-    public float stamina = 10;
-    public float mana = 10;
-    public float money = 0000;
-
-    private Rigidbody2D Rigidbody2D;
-    private Animator Animator;
-    private CapsuleCollider2D CapsuleCollider;
+    // Components
+    private Rigidbody2D Rigidbody2D; // Rigidbody2D to store the rigidbody of the main character
+    private Animator Animator; // Animator to store the animator of the main character
+    private CapsuleCollider2D CapsuleCollider; // CapsuleCollider2D to store the capsule collider of the main character
+    private GameObject punchMode; // GameObject to store the punch mode
+    private GameObject swordMode; // GameObject to store the sword mode
+    private CanvasGroup punchCanvas; // CanvasGroup to store the canvas of the punch mode
+    private CanvasGroup swordCanvas; // CanvasGroup to store the canvas of the sword mode
     
-    public bool isGrounded;
-    public bool jumpPressed;
-    public bool hasJumped;
-    private bool isRunning;
-    private bool isCrouching;
-    private bool swordOn;
-    private bool isDoubleTap = false;
-    private float horizontal;
-    private float lastTapTime = 0f;
-    private float currentSpeed;
-    private float doubleTapTime = 0.2f;
+    // Basic Movement Variables
+    private float horizontal; // Float to store the horizontal axis
+    public float speed = 1; // Float to store the speed of the main character
+    private float jumpForce = 150; // Float to store the jump force of the main character
+    private float rayCastSize = 0.2f; // Float to store the size of the ray cast
+    public float doubleTapSpeedMultiplier = 1.3f; // Float to store the double tap speed multiplier
+    public float currentSpeed; // Float to store the current speed of the main character
+
+    // Advanced Movement Variables  
+    private bool isGrounded; // Boolean to store if the main character is grounded
+    private bool jumpPressed; // Boolean to store if the jump button is pressed
+    private bool hasJumped; // Boolean to store if the main character has jumped
+    private bool isMoving; // Boolean to store if the main character is moving
+    private bool isCrouching; // Boolean to store if the main character is crouching
+    public bool swordOn; // Boolean to store if the sword is out or not
+    public bool isSprinting = false; // Boolean to store if the player has double tapped the sprint key
+    private float lastTapTime = 0f; // Float to store the last tap time
+    private float doubleTapTime = 0.2f; // Float to store the double tap time
+    public float staminaCrouchRegeneration = 0.003f; // Float to store the stamina crouch regeneration
+    public float staminaCurrentRegeneration = 0.001f; // Float to store the stamina current regeneration
+    public float staminaSprintConsumption = 0.01f; // Float to store the stamina sprint depletion
+
+    // Max Values Variables
+    // /* ALREADY NOT USED */ private float maxHealth = 10; // Float to store the max health of the main character
+    // /* ALREADY NOT USED */ private float maxcurrentStamina = 10; // Float to store the max currentStamina of the main character
+    // /* ALREADY NOT USED */ private float maxMana = 10; // Float to store the max mana of the main character
+
+    // Current Values Variables [It has to be public to be accessed by the dataGameController script]
+    public float currentHealth; // Float to store the current health of the main character
+    public float currentStamina; // Float to store the currentStamina of the main character
+    public float currentMana; // Float to store the mana of the main character
+    public float currentMoney; // Float to store the money of the main character
+
+    // Debug Variables To Be Removed After Debugging
+    private float damage = 1; // Float to store the damage of the main character
 
     /**
      * Method to initialize the script
      * - Get the rigidbody
      * - Get the animator
+     * - Get the capsule collider
      */
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
         CapsuleCollider = GetComponent<CapsuleCollider2D>();
-        currentHealth = maxHealth;
+
+        punchMode = GameObject.Find("Punch");
+        swordMode = GameObject.Find("Sword");
+        
+        punchCanvas = punchMode.GetComponent<CanvasGroup>();
+        swordCanvas = swordMode.GetComponent<CanvasGroup>();
     }
 
     /**
      * Method to update the script every frame
-     * - Get the horizontal axis
-     * - Check the horizontal axis
-         * [IF is greater than 0] - Set the scale to 1
-         * [ELSE IF is less than 0] - Set the scale to -1
-     * - Check if the player is running
-         * [IF is running] - Set the running animation to true
-     * - Check if the player has pressed the jump button
-         * [IF has pressed the jump button] - Set the jump animation to true
-     * - Check if the player is grounded
-         * [IF is grounded] - Set the is grounded to true
-         * [ELSE] - Set the is grounded to false
-     * - Check if the player has jumped
-         * [IF has jumped] - Call the jump method
-     * - Check if the player has pressed the left or right arrow 
-         * [IF has pressed the left or right arrow] - Set the last tap time
-     * - Check if the player has pressed the left or right arrow twice
-         * [IF has pressed the left or right arrow twice] - Set the double tap to true
-         * [ELSE] - Set the double tap to false
-     * - Set the last tap time
      */
     void Update()
     {
-        horizontal = Input.GetAxis("Horizontal");
+        horizontal = Input.GetAxis("Horizontal"); // Get the horizontal axis from the input manager
 
+        // Check the horizontal axis and set the scale and the is moving boolean
         if (horizontal > 0.0f)
         {
             transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            isRunning = true;
+            isMoving = true;
         }
         else if (horizontal < 0.0f)
         {
             transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-            isRunning = true;
+            isMoving = true;
         }
         else
         {
-            isRunning = false;
+            isMoving = false;
         }
 
+        // If horizontal its diferent than 0, set the running animation to true
         Animator.SetBool("Running", horizontal != 0.0f);
 
+        // Check if the player has pressed the jump button
         jumpPressed = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space);
+
+        // Check if the player is grounded and set the animation bool
+        setJumpStatus(Physics2D.Raycast(transform.position, Vector2.down, rayCastSize));
+
+        // Set the player crouch status and animation
+        if (isGrounded) { crouch(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)); }
+
         
-        RaycastHit2D raycastHit2D = Physics2D.Raycast(transform.position, Vector2.down, rayCastSize);
-
-        if (raycastHit2D.collider != null)
-        {
-            isGrounded = true;
-            Animator.SetBool("Jumping", false);
-        }
-        else
-        {
-            isGrounded = false;
-        }
-
+        // In case the player has pressed the movement arrows twice, then the sprint will be true
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) )
         {
             float timeSinceLastTap = Time.time - lastTapTime;
-
-            if (timeSinceLastTap < doubleTapTime)
-            {
-                isDoubleTap = true;
-            }
-            else
-            {
-                isDoubleTap = false;
-            }
-
+            isSprinting = false;
+            if (timeSinceLastTap < doubleTapTime) { isSprinting = true; }
             lastTapTime = Time.time;
         }
-        if (isGrounded)
-        {
-            isCrouching = Input.GetKey(KeyCode.S);
-            Animator.SetBool("Crouching", isCrouching);
-        }
+        
+        // In case the player is not pressing the movement arrows or the stamina is 0, then the sprint will be false
+        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) || currentStamina <= 0 ) { isSprinting = false; }
 
-        if (isDoubleTap && stamina > 0)
-        {
-            stamina -= 0.01f;
-        }
+        // Set the player stamina consumption and regeneration
+        sprintStaminaStatus(isSprinting); 
 
-        if (stamina <= 0)
-        {
-            isDoubleTap = false;
-        }
+        // If the jump button is pressed and the player is grounded, then the player will jump
+        if (jumpPressed && Physics2D.Raycast(transform.position, Vector3.down, rayCastSize) && !hasJumped) { Jump(); }
 
-        // if the player has 5 seconds without running, then the stamina will be increased
-        if (stamina < 10 && !isDoubleTap)
-        {
-            stamina += 0.01f;
-        }
+        // When the player press Q or right click, the sword will be shown
+        if (Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) { setSwordStatus(); }
 
+        swordStatus(); // Set the sword status
 
-
-
-        // if isCrouching is true, then the player cannot move
-        if (isCrouching)
-        {
-            horizontal = 0;
-            jumpPressed = false;
-            // make the player's collider shorter
-            CapsuleCollider.size = new Vector2(0.1f, 0.15f);
-        } 
-        else
-        {
-            // make the player's collider taller
-            CapsuleCollider.size = new Vector2(0.1f, 0.25f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.K)) 
-        {
-            money += 1;
-        }
-
+        // Debug Methods
+        if (Input.GetKeyDown(KeyCode.K)) { currentMoney += 1; }
         if (Input.GetKeyDown(KeyCode.L)) 
         {
             TakeDamage(damage);
-            mana -= damage;
-            stamina -= damage;
+            currentMana -= damage;
+            currentStamina -= damage;
         }
 
         // if (Input.GetKeyDown(KeyCode.Z) && !isAttacking)
         // {
         //      Attack();
         // }
-
-        if (jumpPressed && Physics2D.Raycast(transform.position, Vector3.down, rayCastSize) && !hasJumped)
-        {
-            Jump();
-            hasJumped = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q) && !swordOn && !isCrouching && !isRunning && isGrounded)
-        {
-            Animator.SetBool("ShowSword", true);
-            swordOn = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.Q) && swordOn && !isCrouching && !isRunning && isGrounded)
-        {
-            swordOn = false;
-            Animator.SetBool("ShowSword", false);
-        }
     }
 
     /**
@@ -200,7 +152,6 @@ public class mainCharacterScript : MonoBehaviour
     {
         Rigidbody2D.AddForce(Vector2.up * jumpForce);
         Animator.SetBool("Jumping", true);
-        
     }
 
     /**
@@ -213,32 +164,16 @@ public class mainCharacterScript : MonoBehaviour
     void FixedUpdate()
     {
         currentSpeed = speed;
-
-        if (isDoubleTap)
-        {
-            currentSpeed *= doubleTapSpeedMultiplier;
-        }
+        if (isSprinting) { currentSpeed *= doubleTapSpeedMultiplier; }
 
         Rigidbody2D.velocity = new Vector2(horizontal * currentSpeed, Rigidbody2D.velocity.y);
     }
-    
-    /**
-     * Method to check if the player has collided with something
-     * - Check if the player has collided with something
-         * [IF has collided with something] - Set the has jumped to false
-     */
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        hasJumped = false;
-    }
 
     /**
-     * Method to check if the player has collided with something
-     * - Check if the player has collided with something
-         * [IF has collided with something] - Set the has jumped to false
+     * Method for the player can take damage
+     * - Make a damage to the player
+         * [IF the current health is less than 0] - Call the die method
      */
-
-
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
@@ -248,7 +183,11 @@ public class mainCharacterScript : MonoBehaviour
         }
     }
 
-    
+    /**
+     * Method to make the player die
+     * - Set the die animation to true
+     * - Return to the main menu
+     */
     private void Die()
     {
         currentHealth -= damage;
@@ -260,21 +199,96 @@ public class mainCharacterScript : MonoBehaviour
         currentHealth = 10;
     }
 
-    // private void Attack()
-    // {
-    //     Animator.SetTrigger("Attack");
-    //     isAttacking = true;
+    /**
+     * Method to check if the player has collided with something and set the animation status
+     * - Check if the player has collided with something
+         * [IF has collided with something] - Set the is grounded to true and set the jump animation to false
+         * [ELSE] - Set the is grounded to false
+     */
+    private void setJumpStatus(RaycastHit2D raycastHit2D) {
+        if (raycastHit2D.collider != null)
+        {
+            isGrounded = true;
+            Animator.SetBool("Jumping", false);
+            hasJumped = false;
+        }
+        else
+        {
+            hasJumped = true;
+            isGrounded = false;
+        }
+    }
 
-    //     Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+    /**
+     * Method to check if the player is crouching
+     * - Check if the player is crouching
+         * [IF is crouching] - Set the horizontal to 0 and set the jump pressed to false
+     */
+    private void crouch(bool isCrouching)
+    {
+        Animator.SetBool("Crouching", isCrouching);
+        if (isCrouching)
+        {
+            horizontal = 0f;
+            jumpPressed = false;
+            isSprinting = false;
+            CapsuleCollider.size = new Vector2(0.1f, 0.15f);
+            if (currentStamina < 10) { currentStamina += staminaCrouchRegeneration; }
+        } 
+        else
+        {
+            CapsuleCollider.size = new Vector2(0.1f, 0.25f);
+        }
+    }
 
-    //     foreach (Collider2D enemy in hitEnemies)
-    //     {
-    //         enemy.GetComponent<enemyScript>().TakeDamage(swordDamage);
-    //     }
-    // }
+    /**
+     * Method to check and set the player stamina status
+     * - Check if the player is sprinting
+         * [IF is sprinting and stamina its more than 0] - Set the current stamina to the sprint consumption
+         * [ELSE IF is not sprinting and stamina is less than 10] - Set the current stamina to the current regeneration
+     */
+    private void sprintStaminaStatus(bool isSprinting)
+    {
+        if (isSprinting && currentStamina > 0)
+        {
+            currentStamina -= staminaSprintConsumption;
+        }
+        else if (!isSprinting && currentStamina < 10)
+        {
+            currentStamina += staminaCurrentRegeneration;
+        }
+    }
 
-    // public void EndAttack()
-    // {
-    //     isAttacking = false;
-    // }
+    /**
+     * Method to show the sword
+     * - Check if the player is not crouching, is not moving and is grounded
+         * [IF is not crouching, is not moving, is grounded and don't get the sword out] - Set the sword on to true and set the show sword animation to true
+         * [ELSE IF is not crouching, is not moving, is grounded and get the sword out] - Set the sword on to false and set the show sword animation to false
+     */
+    public void setSwordStatus()
+    {
+        if (!swordOn && !isCrouching && !isMoving && isGrounded)
+        {
+            swordOn = true;
+        }
+        else if (swordOn && !isCrouching && !isMoving && isGrounded)
+        {
+            swordOn = false;
+        }
+        showSword(swordOn);
+    }
+
+    public void showSword(bool swordOn) {
+        Animator.SetBool("ShowSword", swordOn);
+    }
+
+    private void swordStatus() {
+        if (swordOn) {
+            swordCanvas.alpha = 1;
+            punchCanvas.alpha = 0;
+        } else {
+            swordCanvas.alpha = 0;
+            punchCanvas.alpha = 1;
+        }
+    }
 }

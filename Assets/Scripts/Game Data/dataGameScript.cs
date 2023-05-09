@@ -6,15 +6,9 @@ using UnityEngine;
 public class dataGameScript
 {
     // Variables
-    public Vector3 mainCharacterPosition;
-
-    public float damage;
-
-    public float maxHealth;
-    public float currentHealth;
-    public float stamina;
-    public float mana;
-    
-    public float money;
-    // Aqui almacenamos todos los datos que se cogeran en el dataGameController
+    public Vector3 mainCharacterPosition; // Vector3 to store the position of the main character
+    public float currentHealth; // Float to store the current health of the main character
+    public float currentStamina; // Float to store the current stamina of the main character
+    public float currentMana; // Float to store the current mana of the main character
+    public float currentMoney; // Float to store the current money of the main character
 }
