@@ -78,7 +78,7 @@ public class dataGameController : MonoBehaviour
             dataGameScript = JsonUtility.FromJson<dataGameScript>(json);
             mainCharacter.transform.position = dataGameScript.mainCharacterPosition;
             mainCharacter.GetComponent<mainCharacterScript>().mana = dataGameScript.mana;
-            mainCharacter.GetComponent<mainCharacterScript>().health = dataGameScript.health;
+            mainCharacter.GetComponent<mainCharacterScript>().currentHealth = dataGameScript.currentHealth;
             mainCharacter.GetComponent<mainCharacterScript>().stamina = dataGameScript.stamina;
             mainCharacter.GetComponent<mainCharacterScript>().money = dataGameScript.money;
         }
@@ -95,7 +95,7 @@ public class dataGameController : MonoBehaviour
     private void setData() {
         dataGameScript.mainCharacterPosition = mainCharacter.transform.position;
         dataGameScript.mana = mainCharacter.GetComponent<mainCharacterScript>().mana;
-        dataGameScript.health = mainCharacter.GetComponent<mainCharacterScript>().health;
+        dataGameScript.currentHealth = mainCharacter.GetComponent<mainCharacterScript>().currentHealth;
         dataGameScript.stamina = mainCharacter.GetComponent<mainCharacterScript>().stamina;
         dataGameScript.money = mainCharacter.GetComponent<mainCharacterScript>().money;
         string json = JsonUtility.ToJson(dataGameScript);
@@ -108,8 +108,8 @@ public class dataGameController : MonoBehaviour
     }
 
     private void setHealth() {
-        dataGameScript.health = mainCharacter.GetComponent<mainCharacterScript>().health;
-        healthBar.GetComponent<Image>().fillAmount = dataGameScript.health / 10f;
+        dataGameScript.currentHealth = mainCharacter.GetComponent<mainCharacterScript>().currentHealth;
+        healthBar.GetComponent<Image>().fillAmount = dataGameScript.currentHealth / 10f;
     }
 
     private void setMana() {

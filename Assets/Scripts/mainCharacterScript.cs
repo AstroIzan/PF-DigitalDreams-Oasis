@@ -9,7 +9,8 @@ public class mainCharacterScript : MonoBehaviour
     public float jumpForce;
     public float rayCastSize;
     public float doubleTapSpeedMultiplier = 1.3f;
-    public float health = 10;
+    public float maxHealth = 10;
+    public float currentHealth;
     public float damage = 1f;
     public float stamina = 10;
     public float mana = 10;
@@ -24,6 +25,7 @@ public class mainCharacterScript : MonoBehaviour
     public bool hasJumped;
     private bool isRunning;
     private bool isCrouching;
+    private bool swordOn;
     private bool isDoubleTap = false;
     private float horizontal;
     private float lastTapTime = 0f;
@@ -40,6 +42,7 @@ public class mainCharacterScript : MonoBehaviour
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
         CapsuleCollider = GetComponent<CapsuleCollider2D>();
+        currentHealth = maxHealth;
     }
 
     /**
@@ -71,10 +74,16 @@ public class mainCharacterScript : MonoBehaviour
         if (horizontal > 0.0f)
         {
             transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            isRunning = true;
         }
         else if (horizontal < 0.0f)
         {
             transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
         }
 
         Animator.SetBool("Running", horizontal != 0.0f);
@@ -114,6 +123,24 @@ public class mainCharacterScript : MonoBehaviour
             Animator.SetBool("Crouching", isCrouching);
         }
 
+        if (isDoubleTap && stamina > 0)
+        {
+            stamina -= 0.01f;
+        }
+
+        if (stamina <= 0)
+        {
+            isDoubleTap = false;
+        }
+
+        // if the player has 5 seconds without running, then the stamina will be increased
+        if (stamina < 10 && !isDoubleTap)
+        {
+            stamina += 0.01f;
+        }
+
+
+
 
         // if isCrouching is true, then the player cannot move
         if (isCrouching)
@@ -152,10 +179,16 @@ public class mainCharacterScript : MonoBehaviour
             hasJumped = true;
         }
 
-        // if (input.GetKeyDown(KeyCode.Q))
-        // {
-        //     Animator.SetBool("ShowSword", );
-        // }
+        if (Input.GetKeyDown(KeyCode.Q) && !swordOn && !isCrouching && !isRunning && isGrounded)
+        {
+            Animator.SetBool("ShowSword", true);
+            swordOn = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.Q) && swordOn && !isCrouching && !isRunning && isGrounded)
+        {
+            swordOn = false;
+            Animator.SetBool("ShowSword", false);
+        }
     }
 
     /**
@@ -208,8 +241,8 @@ public class mainCharacterScript : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
-        if (health <= 0)
+        currentHealth -= damage;
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -218,13 +251,13 @@ public class mainCharacterScript : MonoBehaviour
     
     private void Die()
     {
-        health -= damage;
+        currentHealth -= damage;
 
         // Animator.SetBool("Die", true);
 
         // return to main menu
         Debug.Log("You died!");
-        health = 10;
+        currentHealth = 10;
     }
 
     // private void Attack()

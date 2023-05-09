@@ -10,7 +10,8 @@ public class dataGameScript
 
     public float damage;
 
-    public float health;
+    public float maxHealth;
+    public float currentHealth;
     public float stamina;
     public float mana;
     
