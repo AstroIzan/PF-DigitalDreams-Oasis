@@ -18,7 +18,7 @@ public class mainCharacterScript : MonoBehaviour
     private float horizontal; // Float to store the horizontal axis
     public float speed = 1; // Float to store the speed of the main character
     private float jumpForce = 150; // Float to store the jump force of the main character
-    private float rayCastSize = 0.2f; // Float to store the size of the ray cast
+    public float rayCastSize = 0.2f; // Float to store the size of the ray cast
     public float doubleTapSpeedMultiplier = 1.3f; // Float to store the double tap speed multiplier
     public float currentSpeed; // Float to store the current speed of the main character
 
@@ -32,14 +32,14 @@ public class mainCharacterScript : MonoBehaviour
     public bool isSprinting = false; // Boolean to store if the player has double tapped the sprint key
     private float lastTapTime = 0f; // Float to store the last tap time
     private float doubleTapTime = 0.2f; // Float to store the double tap time
-    public float staminaCrouchRegeneration = 0.003f; // Float to store the stamina crouch regeneration
-    public float staminaCurrentRegeneration = 0.001f; // Float to store the stamina current regeneration
-    public float staminaSprintConsumption = 0.01f; // Float to store the stamina sprint depletion
+    public float staminaCrouchRegeneration = 0.005f; // Float to store the stamina crouch regeneration
+    public float staminaCurrentRegeneration = 0.003f; // Float to store the stamina current regeneration
+    public float staminaSprintConsumption = 0.003f; // Float to store the stamina sprint depletion
 
     // Max Values Variables
-    // /* ALREADY NOT USED */ private float maxHealth = 10; // Float to store the max health of the main character
-    // /* ALREADY NOT USED */ private float maxcurrentStamina = 10; // Float to store the max currentStamina of the main character
-    // /* ALREADY NOT USED */ private float maxMana = 10; // Float to store the max mana of the main character
+    /* ALREADY NOT USED */ private float maxHealth = 10; // Float to store the max health of the main character
+    /* ALREADY NOT USED */ private float maxcurrentStamina = 10; // Float to store the max currentStamina of the main character
+    /* ALREADY NOT USED */ private float maxMana = 10; // Float to store the max mana of the main character
 
     // Current Values Variables [It has to be public to be accessed by the dataGameController script]
     public float currentHealth; // Float to store the current health of the main character
@@ -96,7 +96,7 @@ public class mainCharacterScript : MonoBehaviour
         Animator.SetBool("Running", horizontal != 0.0f);
 
         // Check if the player has pressed the jump button
-        jumpPressed = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space);
+        jumpPressed = Input.GetKeyDown(KeyCode.W);
 
         // Check if the player is grounded and set the animation bool
         setJumpStatus(Physics2D.Raycast(transform.position, Vector2.down, rayCastSize));
@@ -106,7 +106,7 @@ public class mainCharacterScript : MonoBehaviour
 
         
         // In case the player has pressed the movement arrows twice, then the sprint will be true
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) )
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
         {
             float timeSinceLastTap = Time.time - lastTapTime;
             isSprinting = false;
@@ -135,6 +135,14 @@ public class mainCharacterScript : MonoBehaviour
             TakeDamage(damage);
             currentMana -= damage;
             currentStamina -= damage;
+        }
+
+        if (Input.GetKeyDown(KeyCode.M)) 
+        {
+            // All full
+            currentHealth = maxHealth;
+            currentStamina = maxcurrentStamina;
+            currentMana = maxMana;
         }
 
         // if (Input.GetKeyDown(KeyCode.Z) && !isAttacking)
