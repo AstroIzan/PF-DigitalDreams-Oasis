@@ -9,6 +9,8 @@ public class mainCharacterScript : MonoBehaviour
     private Rigidbody2D Rigidbody2D; // Rigidbody2D to store the rigidbody of the main character
     private Animator Animator; // Animator to store the animator of the main character
     private CapsuleCollider2D CapsuleCollider; // CapsuleCollider2D to store the capsule collider of the main character
+
+    // To add to gameDataController
     private GameObject punchMode; // GameObject to store the punch mode
     private GameObject swordMode; // GameObject to store the sword mode
     private CanvasGroup punchCanvas; // CanvasGroup to store the canvas of the punch mode
