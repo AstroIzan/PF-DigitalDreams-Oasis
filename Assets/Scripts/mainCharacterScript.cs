@@ -97,15 +97,11 @@ public class mainCharacterScript : MonoBehaviour
         // If horizontal its diferent than 0, set the running animation to true
         Animator.SetBool("Running", horizontal != 0.0f);
 
-        // Check if the player has pressed the jump button
-        jumpPressed = Input.GetKeyDown(KeyCode.W);
-
         // Check if the player is grounded and set the animation bool
         setJumpStatus(Physics2D.Raycast(transform.position, Vector2.down, rayCastSize));
 
         // Set the player crouch status and animation
         if (isGrounded) { crouch(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)); }
-
         
         // In case the player has pressed the movement arrows twice, then the sprint will be true
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
@@ -123,7 +119,7 @@ public class mainCharacterScript : MonoBehaviour
         sprintStaminaStatus(isSprinting); 
 
         // If the jump button is pressed and the player is grounded, then the player will jump
-        if (jumpPressed && Physics2D.Raycast(transform.position, Vector3.down, rayCastSize) && !hasJumped) { Jump(); }
+        if (Input.GetKeyDown(KeyCode.W) && Physics2D.Raycast(transform.position, Vector3.down, rayCastSize) && !hasJumped) { Jump(); }
 
         // When the player press Q or right click, the sword will be shown
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) { setSwordStatus(); }
