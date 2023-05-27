@@ -32,14 +32,6 @@ public class startSession : MonoBehaviour
     }
 
     /**
-     * Method to load the game scene
-     */
-    public void continueGame()
-    {
-        SceneManager.LoadScene("gameScene");
-    }
-
-    /**
      * Method to return to the main menu
      */
     public void exitGame() 
@@ -73,7 +65,7 @@ public class startSession : MonoBehaviour
      */
     public void acceptModalAlertGame()
     {
-        SceneManager.LoadScene("gameScene");
+        SceneManager.LoadScene("mainMenuScene");
     }
 
     /**

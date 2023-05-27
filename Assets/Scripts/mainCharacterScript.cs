@@ -118,8 +118,11 @@ public class mainCharacterScript : MonoBehaviour
         // Set the player stamina consumption and regeneration
         sprintStaminaStatus(isSprinting); 
 
+        // If the player press the jump button, then the jump pressed will be true
+        jumpPressed = Input.GetKeyDown(KeyCode.W);
+
         // If the jump button is pressed and the player is grounded, then the player will jump
-        if (Input.GetKeyDown(KeyCode.W) && Physics2D.Raycast(transform.position, Vector3.down, rayCastSize) && !hasJumped) { Jump(); }
+        if (jumpPressed && Physics2D.Raycast(transform.position, Vector3.down, rayCastSize) && !hasJumped) { Jump(); }
 
         // When the player press Q or right click, the sword will be shown
         if (Input.GetKeyDown(KeyCode.Q) || Input.GetMouseButtonDown(1)) { setSwordStatus(); }
